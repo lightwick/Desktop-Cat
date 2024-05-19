@@ -47,6 +47,10 @@ class Ket:
 
         self.label.pack()
 
+        # Bind the mouse events for dragging
+        self.label.bind("<ButtonPress-1>", self.on_start)
+        self.label.bind("<B1-Motion>", self.on_drag)
+
         self.window.after(1, self.update, self.i_frame, self.state, self.event_number, self.x)
         self.window.mainloop()
 
@@ -105,5 +109,18 @@ class Ket:
         self.window.geometry('72x64+'+str(self.x)+'+'+str(self.y))
         self.label.configure(image=self.frame)
         self.window.after(1, self.event, self.i_frame, self.state, self.event_number, self.x)
+
+    def on_start(self, event):
+        # Record the initial position of the mouse
+        self.start_x = event.x
+        self.start_y = event.y
+
+    def on_drag(self, event):
+        # Calculate the new position of the window
+        x = self.window.winfo_x() + event.x - self.start_x
+        y = self.window.winfo_y() + event.y - self.start_y
+        self.x = x
+        self.y = y
+        self.window.geometry(f'+{x}+{y}')
 
 ket=Ket()      
